@@ -59,13 +59,22 @@ I also think this default keeps the first version of the endpoint simple. The cu
 The tradeoff is privacy. Some users may expect a watchlist to be personal, especially if it reflects films they are curious about but have not watched yet. A private default would be safer from a privacy-first perspective. For this version, I think the community/discovery use case supports `public=True`, but a future improvement would be to add an explicit visibility parameter so callers can choose whether each watchlist entry is public or private.
 
 
-## Comment 5 � Sort order
+## Comment 5 — Sort order
 
 **My position:**
 
+I agreed with the maintainer and changed the watchlist default sort order from alphabetical title order to date-added order, newest first.
+
 **Reasoning:**
 
+A watchlist is closer to a saved queue than a catalog browsing page. When a user adds a film to their watchlist, the most recently added item is usually the most relevant one to show first. This also matches the existing collection behavior in `get_collection()`, which returns films by `date_added` descending.
+
+Alphabetical order can be useful for scanning a long list, but it hides the user's most recent action. For the default API behavior, newest-first is a better fit because it reflects how users usually return to a saved list: they often want to see what they just added.
+
 **Engagement with reviewer's point:**
+
+The maintainer's point is reasonable because the API should optimize for the most common user behavior. Since CineLog already uses newest-first ordering for collections, updating the watchlist to use `WatchlistEntry.date_added.desc()` also makes the watchlist more consistent with the rest of the codebase.
+
 
 ## Comment 6 � Rebase
 
