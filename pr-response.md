@@ -76,13 +76,21 @@ Alphabetical order can be useful for scanning a long list, but it hides the user
 The maintainer's point is reasonable because the API should optimize for the most common user behavior. Since CineLog already uses newest-first ordering for collections, updating the watchlist to use `WatchlistEntry.date_added.desc()` also makes the watchlist more consistent with the rest of the codebase.
 
 
-## Comment 6 � Rebase
+## Comment 6 — Rebase
 
 **What conflicted:**
 
+The rebase conflicted with the film ID refactor that had merged into `main`. The feature branch originally used integer film IDs in the watchlist code, while updated `main` migrated film IDs to UUID strings. During the rebase, I also had to resolve the `.gitignore` conflict because both my branch and `main` had added one.
+
 **How I resolved it:**
 
+I rebased `feature/watchlist` on top of updated `main` and kept the UUID-based version of the film model. I restored the `WatchlistEntry` model after the rebase and updated its `film_id` field to use `db.String(36)` so it matches the UUID type used by `Film.id`. I also kept the watchlist relationship to `Film`, kept the `public=True` default, and added a unique constraint on `user_id` and `film_id` to support the deduplication behavior.
+
+I also updated the watchlist service and route comments so `film_id` is described as a UUID instead of an integer.
+
 **How I verified no conflict remains:**
+
+I ran `python -m py_compile models.py services\watchlist_service.py routes\watchlist\watchlist.py` to confirm the changed files compile. I ran `pytest tests/ -v` and confirmed the full test suite passed. I also ran `git log --oneline --merges origin/main..HEAD` and confirmed there were no merge commits on the feature branch.
 
 ## PR Description
 

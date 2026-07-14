@@ -1,5 +1,5 @@
-"""
-routes/watchlist.py — CineLog (feature/watchlist branch)
+﻿"""
+routes/watchlist.py â€” CineLog (feature/watchlist branch)
 
 Endpoints for the watchlist feature.
 """
@@ -13,7 +13,7 @@ watchlist_bp = Blueprint("watchlist", __name__)
 
 @watchlist_bp.route("/<user_id>", methods=["GET"])
 def view_watchlist(user_id):
-    """GET /watchlist/<user_id> — Return the user's watchlist."""
+    """GET /watchlist/<user_id> â€” Return the user's watchlist."""
     films = get_watchlist(user_id)
     return jsonify(films)
 
@@ -23,7 +23,7 @@ def add_film(user_id):
     """
     POST /watchlist/<user_id>/add
 
-    Body: { "film_id": <int> }
+    Body: { "film_id": <uuid> }
     """
     data = request.get_json()
     if not data or "film_id" not in data:
