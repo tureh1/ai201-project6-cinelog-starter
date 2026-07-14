@@ -42,13 +42,22 @@ I also added `test_add_to_watchlist_duplicate_raises` to cover the deduplication
 
 I ran `python -m py_compile tests\test_watchlist.py` to confirm the test file had no syntax or encoding errors. I then ran `pytest tests/test_watchlist.py -v` and confirmed both watchlist tests passed. Finally, I ran `pytest tests/ -v` and confirmed the full test suite passed with 6 tests.
 
-## Comment 4 � Default visibility
+## Comment 4 — Default visibility
 
 **My position:**
 
+I chose to keep `public=True` as the default for watchlist entries.
+
 **Reasoning:**
 
+CineLog is described as a community film tracking app, so I think the watchlist feature should support social discovery by default. A public watchlist lets other users see what someone is interested in watching, which fits the same community-oriented purpose as sharing film activity, collections, and recommendations.
+
+I also think this default keeps the first version of the endpoint simple. The current `POST /watchlist/<user_id>/add` request only accepts a `film_id`, so the model default gives the feature a clear behavior without requiring the caller to pass extra visibility data before the app has a dedicated privacy UI.
+
 **Tradeoff acknowledged:**
+
+The tradeoff is privacy. Some users may expect a watchlist to be personal, especially if it reflects films they are curious about but have not watched yet. A private default would be safer from a privacy-first perspective. For this version, I think the community/discovery use case supports `public=True`, but a future improvement would be to add an explicit visibility parameter so callers can choose whether each watchlist entry is public or private.
+
 
 ## Comment 5 � Sort order
 
