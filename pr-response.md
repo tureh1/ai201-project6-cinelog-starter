@@ -94,4 +94,26 @@ I ran `python -m py_compile models.py services\watchlist_service.py routes\watch
 
 ## PR Description
 
+This PR adds a watchlist feature to CineLog so users can save films they want to watch later. It includes a `WatchlistEntry` model, watchlist service functions, and REST endpoints for viewing a user's watchlist and adding a film to the watchlist.
+
+During review, I addressed the maintainer's requested changes. I renamed the service function from `save_to_watchlist()` to `add_to_watchlist()` to match the project's `verb_to_noun` naming convention. I added deduplication logic so the same user cannot add the same film to their watchlist more than once. I also added watchlist service tests for nonexistent film IDs and duplicate watchlist entries.
+
+For default visibility, I chose to keep `public=True` because CineLog is a community film tracking app and public watchlists support discovery and recommendations. I acknowledged the privacy tradeoff and documented that a future improvement would be adding an explicit visibility parameter. For sort order, I agreed with the maintainer and changed the watchlist default ordering to `date_added` descending so users see their most recently saved films first.
+
+I also rebased the branch on the updated `main` branch after the film ID refactor. I updated the watchlist model so `film_id` uses UUID strings consistently with `Film.id`.
+
+Manual testing steps:
+1. Run `python -m venv .venv`
+2. Activate the virtual environment with `.\.venv\Scripts\Activate.ps1`
+3. Run `pip install -r requirements.txt`
+4. Run `pytest tests/ -v`
+5. Start the app with `python app.py`
+6. Test `GET /watchlist/<user_id>` to view a user's watchlist
+7. Test `POST /watchlist/<user_id>/add` with a JSON body like `{ "film_id": "<film_uuid>" }`
+8. Try adding the same film twice and confirm the duplicate is rejected by the service logic
+
 ## Git Log Screenshot
+
+The screenshot below shows my cleaned `git log --oneline` history on the `feature/watchlist` branch after rebasing on `main`.
+
+![Git log screenshot](screenshots/git-log.png)
